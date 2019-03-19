@@ -20,8 +20,10 @@
                     <!-- Loading all the object files -->
                     <a-asset-item id="Dog-obj" src="/assets/models/Dog.obj">
                 </a-asset-item>
+
+                <a-entity play-bark obj-model="obj:#Dog-obj;" position="-1 0 -4" scale="0.06 0.05 0.06" material="color:#fff; src:#dogMap; sphericalEnvMap:#skymap; roughness:0.5; metalness:0.2;" shadow="cast:true; receive:true;"></a-entity>
         </a-scene>
-        
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
             let socket = io();
