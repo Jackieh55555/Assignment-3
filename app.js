@@ -19,10 +19,10 @@ app.get('/', function(req,res) {
 
 //websocket stuff
 socketIO.on('connection', function(socket) {
-    console.log('A Player has connected!');
+    console.log('A player has connected to the game!');
 
     socket.on('disconnect', function(data) {
-        console.log('Player 2has disconnected');
+        console.log('Player has disconnected game');
     });
 
     //custom events
