@@ -17,6 +17,10 @@ app.get('/controller', function(req,res) {
     res.sendFile(__dirname + '/public/controller.html');
 });
 
+app.get('/controller2', function(req,res) {
+    res.sendFile(__dirname + '/public/controller2.html');
+});
+
 //websocket stuff
 socketIO.on('connection', function(socket) {
     console.log('A player has connected to the game!');
@@ -35,7 +39,7 @@ socketIO.on('connection', function(socket) {
 
     socket.on('orange', function(data) {
         console.log('Orange event heard');
-        socketIO.sockets.emit('color_change', {r:255, g:127, b:0});
+        socketIO.sockets.emit('color_change', {r:255, g:127, b:80});
     });
 
     socket.on('yellow', function(data) {
@@ -45,12 +49,12 @@ socketIO.on('connection', function(socket) {
 
     socket.on('green', function(data) {
         console.log('Green event heard');
-        socketIO.sockets.emit('color_change', {r:0, g:255, b:0});
+        socketIO.sockets.emit('color_change', {r:0, g:128, b:0});
     });
 
     socket.on('blue', function(data) {
         console.log('Blue event heard');
-        socketIO.sockets.emit('color_change', {r:0, g:0, b:255});
+        socketIO.sockets.emit('color_change', {r:0, g:191, b:255});
     });
 
     socket.on('purple', function(data) {
