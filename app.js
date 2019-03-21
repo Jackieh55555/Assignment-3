@@ -19,7 +19,7 @@ app.get('/controller', function(req,res) {
 
 //websocket stuff
 socketIO.on('connection', function(socket) {
-    console.log('A player has connected to the game!', LISTEN_PORT);
+    console.log('A player has connected to the game!');
 
     socket.on('disconnect', function(data) {
         console.log('Player has disconnected game');
