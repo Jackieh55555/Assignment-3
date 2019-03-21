@@ -17,13 +17,9 @@ app.get('/controller', function(req,res) {
     res.sendFile(__dirname + '/public/controller.html');
 });
 
-app.get('/controller2', function(req,res) {
-    res.sendFile(__dirname + '/public/controller2.html');
-});
-
 //websocket stuff
 socketIO.on('connection', function(socket) {
-    console.log('A player has connected to the game!');
+    console.log('A player has connected to the game!', LISTEN_PORT);
 
     socket.on('disconnect', function(data) {
         console.log('Player has disconnected game');
