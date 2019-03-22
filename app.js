@@ -17,6 +17,10 @@ app.get('/collaborate', function(req,res) {
     res.sendFile(__dirname + '/public/collaborate.html');
 });
 
+app.get('/collaborate', function(req,res) {
+    res.sendFile(__dirname + '/public/competitive.html');
+});
+
 
 // Array for available colours, playerId, player selected colour, etc
 let nextPlayerId = 0;
@@ -66,7 +70,7 @@ socketIO.on('connection', function(socket) {
         playerColour[socket.id] = colours[data];
         console.log('# of players selected colours are: ' + Object.keys(playerColour).length)
         console.log(playerColour);
-        socket.emit('playerId', playerId[socket.id]);
+        socket.emit('player_id', playerId[socket.id]);
 
         //Mixing colors from colors selected by all players 
         let r = 0;
@@ -90,6 +94,7 @@ socketIO.on('connection', function(socket) {
 
         //Send to all players
         socketIO.sockets.emit('color_change', {r, g, b});
+        socketIO.sockets.emit('players_count', numColoursToMix);
     });
 });
 
