@@ -13,8 +13,8 @@ app.get('/color', function(req,res) {
     res.sendFile(__dirname + '/public/color.html');
 });
 
-app.get('/controller', function(req,res) {
-    res.sendFile(__dirname + '/public/controller.html');
+app.get('/collaborate', function(req,res) {
+    res.sendFile(__dirname + '/public/collaborate.html');
 });
 
 
