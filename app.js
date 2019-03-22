@@ -9,9 +9,9 @@ const LISTEN_PORT = 8080; //make sure greater than 3000. Some ports are reserved
 app.use((express.static(__dirname + '/public'))); //set root dir to the public folder
 
 //routes
-app.get('/color', function(req,res) {
-    res.sendFile(__dirname + '/public/color.html');
-});
+//app.get('/color', function(req,res) {
+  //  res.sendFile(__dirname + '/public/color.html');
+//});
 
 app.get('/collaborate', function(req,res) {
     res.sendFile(__dirname + '/public/collaborate.html');
@@ -44,6 +44,7 @@ socketIO.on('connection', function(socket) {
     nextPlayerId++;
     numberPlayersInGame++;
     playerId[socket.id] = nextPlayerId;
+    socket.to(socket.id).emit('playerId', playerId[socket.id]);
     console.log('player#' + playerId[socket.id] + ' (socket.id=' + socket.id + ') has joined the game! => Total=' + numberPlayersInGame);
     console.log(playerId);
 
@@ -65,6 +66,7 @@ socketIO.on('connection', function(socket) {
         playerColour[socket.id] = colours[data];
         console.log('# of players selected colours are: ' + Object.keys(playerColour).length)
         console.log(playerColour);
+        socket.emit('playerId', playerId[socket.id]);
 
         //Mixing colors from colors selected by all players 
         let r = 0;
@@ -79,17 +81,16 @@ socketIO.on('connection', function(socket) {
             b = b + playerColour[player].b;
             numColoursToMix++;
         });
-        console.log('Sum of colors: r=' + r + ', g=' + g + ', b=' + b);
+        console.log('Sum of colors (' + numColoursToMix + '): r=' + r + ', g=' + g + ', b=' + b);
         
         r = parseInt(r / numColoursToMix);
         g = parseInt(g / numColoursToMix);
         b = parseInt(b / numColoursToMix);
-        console.log('Mixed color:   r=' + r + ', g=' + g + ', b=' + b);
+        console.log('Mixed color   (' + numColoursToMix + '): r=' + r + ', g=' + g + ', b=' + b);
 
         //Send to all players
         socketIO.sockets.emit('color_change', {r, g, b});
     });
-
 });
 
 //finally, start server

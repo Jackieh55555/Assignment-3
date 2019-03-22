@@ -9,6 +9,7 @@
         <h3>- Once players are connected, select 1 color</h3>
         <h3>- Wait till everyone finishes selecting a color</h3>
         <h3>- Once everyone has selected 1 color, the screen will automatically show you all the colors mixed together</h3>
+        
         <!-- some very nice color buttons -->
         <button id="red" style="background-color:red; color:whitesmoke;">RED</button>
         <button id="orange" style="background-color:orange; color:black;">ORANGE</button>
@@ -20,6 +21,10 @@
         <button id="black" style="background-color:black; color:white;">BLACK</button>
         <button id="white" style="background-color:white; color:black;">WHITE</button>
 
+        <h3></h3>
+        <div id="playerId-block" hidden><div id="playerId"></div></div>
+
+        
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -30,14 +35,20 @@
                 console.log("connected!");
             });
 
-
             socket.on('color_change', function(data) {
                 //create rgb color string for css
-                let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
+                var colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
                 console.log("color received: " + colorStr);
 
                 //set background color with received color
                 document.body.style.backgroundColor = colorStr;
+            });
+
+            socket.on('playerId', function(data) {
+                var playerIdStr = 'player ID: ' + data;
+                document.getElementById('playerId-block').hidden = false;
+                document.getElementById('playerId-block').innerText = playerIdStr;
+                console.log("playerId received: " + playerIdStr);
             });
             
             //let's send some events to the server to pass on. Programmatic telephone game!
@@ -48,6 +59,8 @@
             //https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector 
             //note that querySelector can also be used on elements so that you only search for their children
             //instead of all elements within teh "document"
+
+            // colours
             document.querySelector('#red').addEventListener('click', function() {
                 socket.emit('colour_selected', 'red');
             });
