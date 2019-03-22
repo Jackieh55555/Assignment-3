@@ -32,7 +32,9 @@ let colours = {
     green:  {r:0,   g:128, b:0  },
     blue:   {r:0,   g:191, b:255},
     purple: {r:139, g:0,   b:255},
-    pink:   {r:255, g:105, b:180}
+    pink:   {r:255, g:105, b:180},
+    black:  {r:0,   g:0,   b:0  },
+    white:  {r:255, g:255, b:255}
 };
 let mixedColour = {r:255, r:255, r:255};
 

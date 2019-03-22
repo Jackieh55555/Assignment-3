@@ -17,6 +17,8 @@
         <button id="blue" style="background-color:blue; color:whitesmoke;">BLUE</button>
         <button id="purple" style="background-color:purple; color:whitesmoke;">PURPLE</button>
         <button id="pink" style="background-color:pink; color:black;">PINK</button>
+        <button id="black" style="background-color:black; color:white;">BLACK</button>
+        <button id="white" style="background-color:white; color:black;">WHITE</button>
 
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
         <script src="/socket.io/socket.io.js"></script>
@@ -71,6 +73,14 @@
 
             document.querySelector('#pink').addEventListener('click', function() {
                 socket.emit('colour_selected', 'pink');
+            });
+
+            document.querySelector('#black').addEventListener('click', function() {
+                socket.emit('colour_selected', 'black');
+            });
+
+            document.querySelector('#white').addEventListener('click', function() {
+                socket.emit('colour_selected', 'white');
             });
         </script>
     </body>
