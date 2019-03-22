@@ -85,6 +85,8 @@ socketIO.on('connection', function(socket) {
         g = parseInt(g / numColoursToMix);
         b = parseInt(b / numColoursToMix);
         console.log('Mixed color:   r=' + r + ', g=' + g + ', b=' + b);
+
+        //Send to all players
         socketIO.sockets.emit('color_change', {r, g, b});
     });
 
