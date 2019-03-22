@@ -48,30 +48,30 @@
             //note that querySelector can also be used on elements so that you only search for their children
             //instead of all elements within teh "document"
             document.querySelector('#red').addEventListener('click', function() {
-                socket.emit('red');
+                socket.emit('colour_selected', 'red');
             });
 
             document.querySelector('#orange').addEventListener('click', function() {
-                socket.emit('orange');
+                socket.emit('colour_selected', 'orange');
             });
 
             document.querySelector('#yellow').addEventListener('click', function() {
-                socket.emit('yellow');
+                socket.emit('colour_selected', 'yellow');
             });
             document.querySelector('#green').addEventListener('click', function() {
-                socket.emit('green');
+                socket.emit('colour_selected', 'green');
             });
 
             document.querySelector('#blue').addEventListener('click', function() {
-                socket.emit('blue');
+                socket.emit('colour_selected', 'blue');
             });
 
             document.querySelector('#purple').addEventListener('click', function() {
-                socket.emit('purple');
+                socket.emit('colour_selected', 'purple');
             });
 
             document.querySelector('#pink').addEventListener('click', function() {
-                socket.emit('pink');
+                socket.emit('colour_selected', 'pink');
             });
         </script>
     </body>
