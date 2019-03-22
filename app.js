@@ -34,6 +34,7 @@ let colours = {
     purple: {r:139, g:0,   b:255},
     pink:   {r:255, g:105, b:180}
 };
+let mixedColour = {r:255, r:255, r:255};
 
 
 //websocket stuff
@@ -62,62 +63,26 @@ socketIO.on('connection', function(socket) {
         playerColour[socket.id] = colours[data];
         console.log('# of players selected colours are: ' + Object.keys(playerColour).length)
         console.log(playerColour);
-        socketIO.sockets.emit('color_change', colours[data]);
-    });
 
-    socket.on('red', function(data) {
-        //console.log('Red event heard');
-        console.log('Red event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:255, g:0, b:0};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:255, g:0, b:0});
-    });
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let numColoursToMix = 0;
 
-    socket.on('orange', function(data) {
-        //console.log('Orange event heard');
-        console.log('Orange event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:255, g:127, b:80};
-        socketIO.sockets.emit('color_change', {r:255, g:127, b:80});
-    });
+        const list = Object.keys(playerColour);
+        list.forEach(player => {
+            r = r + playerColour[player].r;
+            g = g + playerColour[player].g;
+            b = b + playerColour[player].b;
+            numColoursToMix++;
+        });
+        console.log('sum: r=' + r + ', g=' + g + ', b=' + b);
 
-    socket.on('yellow', function(data) {
-        //console.log('Yellow event heard');
-        console.log('Yellow event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:255, g:255, b:0};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:255, g:255, b:0});
-    });
-
-    socket.on('green', function(data) {
-        //console.log('Green event heard');
-        console.log('Green event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:0, g:128, b:0};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:0, g:128, b:0});
-    });
-
-    socket.on('blue', function(data) {
-        //console.log('Blue event heard');
-        console.log('Blue event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:0, g:191, b:255};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:0, g:191, b:255});
-    });
-
-    socket.on('purple', function(data) {
-        //console.log('Purple event heard');
-        console.log('Purple event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:139, g:0, b:255};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:139, g:0, b:255});
-    });
-
-    socket.on('pink', function(data) {
-        //console.log('Pink event heard');
-        console.log('Pink event heard from player#' + playerId[socket.id]);
-        playerColour[socket.id] = {r:255, g:105, b:180};
-        console.log(playerColour);
-        socketIO.sockets.emit('color_change', {r:255, g:105, b:180});
+        r = parseInt(r / numColoursToMix);
+        g = parseInt(g / numColoursToMix);
+        b = parseInt(b / numColoursToMix);
+        console.log('Mixed colour is: r=' + r + ', g=' + g + ', b=' + b);
+        socketIO.sockets.emit('color_change', {r, g, b});
     });
 
 });
