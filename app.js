@@ -66,6 +66,7 @@ socketIO.on('connection', function(socket) {
         console.log('# of players selected colours are: ' + Object.keys(playerColour).length)
         console.log(playerColour);
 
+        //Mixing colors from colors selected by all players 
         let r = 0;
         let g = 0;
         let b = 0;
@@ -78,12 +79,12 @@ socketIO.on('connection', function(socket) {
             b = b + playerColour[player].b;
             numColoursToMix++;
         });
-        console.log('sum: r=' + r + ', g=' + g + ', b=' + b);
-
+        console.log('Sum of colors: r=' + r + ', g=' + g + ', b=' + b);
+        
         r = parseInt(r / numColoursToMix);
         g = parseInt(g / numColoursToMix);
         b = parseInt(b / numColoursToMix);
-        console.log('Mixed colour is: r=' + r + ', g=' + g + ', b=' + b);
+        console.log('Mixed color:   r=' + r + ', g=' + g + ', b=' + b);
         socketIO.sockets.emit('color_change', {r, g, b});
     });
 
