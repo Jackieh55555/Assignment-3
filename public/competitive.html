@@ -21,8 +21,9 @@
         <div id="playerId-block"><div id="playerId"></div></div>
         <div id="playersCount-block"><div id="playersCount"></div></div>
         <h3></h3>
-        <button id="joinCompetitiveGame" style="background-color:white; color:black;">Join Game</button>
+        <button id="joinCompetitiveGame"  style="background-color:white; color:black;">Join Game</button>
         <button id="startCompetitiveGame" style="background-color:white; color:black;">Start Game</button>
+        <button id="stopCompetitiveGame"  style="background-color:white; color:black;">Stop Game</button>
         <h3></h3>
         <h3>- Typing letters:  (click on correct color button that represent the letter)</h3>
         <h3></h3>
@@ -119,6 +120,10 @@
 
             document.querySelector('#startCompetitiveGame').addEventListener('click', function() {
                 socket.emit('competitive_game', 'start');
+            });
+        
+            document.querySelector('#stopCompetitiveGame').addEventListener('click', function() {
+                socket.emit('competitive_game', 'stop');
             });
         </script>
     </body>

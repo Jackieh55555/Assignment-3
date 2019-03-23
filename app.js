@@ -117,10 +117,16 @@ socketIO.on('connection', function(socket) {
             console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has joined the competitive game! => Total=' + numberCompetitivePlayersInGame);
             console.log(competitivePlayerId);        
             socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
-        } else if (data == 'start') {
+        }
+        else if (data == 'start') {
             console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has started the competitive game! => Total=' + numberCompetitivePlayersInGame);
             console.log(competitivePlayerId);
             socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);     
+        }
+        else if (data == 'stop') {
+            console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has stopped the competitive game! => Total=' + numberCompetitivePlayersInGame);
+            console.log(competitivePlayerId);
+            socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
         }
     });
 });
