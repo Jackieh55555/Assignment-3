@@ -5,26 +5,32 @@
     <body>
         <h1>Welcome to the Color Mixer!</h1>
         <h2>How the game works:</h2>
-        <h3>- 2 or more players have to be connected to the game</h3>
-        <h3>- Once players are connected, select 1 color</h3>
-        <h3>- Wait till everyone finishes selecting a color</h3>
-        <h3>- Once everyone has selected 1 color, the screen will automatically show you all the colors mixed together</h3>
-        
+        <h3>- 1 or more players can connect to collaborate</h3>
+        <h3>- Once any player has selected 1 color, the screen will automatically show you all the colors mixed together</h3>
+
         <!-- some very nice color buttons -->
-        <button id="red" style="background-color:red; color:whitesmoke;">RED</button>
+        <button id="red"    style="background-color:red;    color:whitesmoke;">RED</button>
         <button id="orange" style="background-color:orange; color:black;">ORANGE</button>
         <button id="yellow" style="background-color:yellow; color:black;">YELLOW</button>
-        <button id="green" style="background-color:green; color:whitesmoke;">GREEN</button>
-        <button id="blue" style="background-color:blue; color:whitesmoke;">BLUE</button>
+        <button id="green"  style="background-color:green;  color:whitesmoke;">GREEN</button>
+        <button id="blue"   style="background-color:blue;   color:whitesmoke;">BLUE</button>
         <button id="purple" style="background-color:purple; color:whitesmoke;">PURPLE</button>
-        <button id="pink" style="background-color:pink; color:black;">PINK</button>
-        <button id="black" style="background-color:black; color:white;">BLACK</button>
-        <button id="white" style="background-color:white; color:black;">WHITE</button>
+        <button id="pink"   style="background-color:pink;   color:black;">PINK</button>
+        <button id="black"  style="background-color:black;  color:white;">BLACK</button>
+        <button id="white"  style="background-color:white;  color:black;">WHITE</button>
+
+        <!--
+        <h3></h3>
+        <button id="collaborateStart" style="background-color:white; color:black;">Start Collaborate</button>
+        <button id="collaborateStop"  style="background-color:white; color:black;">Stop  Collaborate</button>
+        -->
 
         <h3></h3>
-        <div id="playerId-block" hidden><div id="playerId"></div></div>
-        <div id="playersCount-block" hidden><div id="playersCount"></div></div>
+        <div id="playerId-block"><div id="playerId"></div></div>
+        <div id="playersCount-block"><div id="playersCount"></div></div>
         
+        
+
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -46,14 +52,14 @@
 
             socket.on('player_id', function(data) {
                 var playerIdStr = 'Player ID: ' + data;
-                document.getElementById('playerId-block').hidden = false;
+                //document.getElementById('playerId-block').hidden = false;
                 document.getElementById('playerId-block').innerText = playerIdStr;
                 console.log('player_id received: ' + playerIdStr);
             });
 
             socket.on('players_count', function(data) {
                 var playersCountStr = 'Number of Players: ' + data;
-                document.getElementById('playersCount-block').hidden = false;
+                //document.getElementById('playersCount-block').hidden = false;
                 document.getElementById('playersCount-block').innerText = playersCountStr;
                 console.log('players_count received: ' + playersCountStr);
             });
@@ -67,40 +73,44 @@
             //note that querySelector can also be used on elements so that you only search for their children
             //instead of all elements within teh "document"
 
-            // colours
+            // colors
             document.querySelector('#red').addEventListener('click', function() {
-                socket.emit('colour_selected', 'red');
+                socket.emit('color_selected', 'red');
             });
 
             document.querySelector('#orange').addEventListener('click', function() {
-                socket.emit('colour_selected', 'orange');
+                socket.emit('color_selected', 'orange');
             });
 
             document.querySelector('#yellow').addEventListener('click', function() {
-                socket.emit('colour_selected', 'yellow');
+                socket.emit('color_selected', 'yellow');
             });
             document.querySelector('#green').addEventListener('click', function() {
-                socket.emit('colour_selected', 'green');
+                socket.emit('color_selected', 'green');
             });
 
             document.querySelector('#blue').addEventListener('click', function() {
-                socket.emit('colour_selected', 'blue');
+                socket.emit('color_selected', 'blue');
             });
 
             document.querySelector('#purple').addEventListener('click', function() {
-                socket.emit('colour_selected', 'purple');
+                socket.emit('color_selected', 'purple');
             });
 
             document.querySelector('#pink').addEventListener('click', function() {
-                socket.emit('colour_selected', 'pink');
+                socket.emit('color_selected', 'pink');
             });
 
             document.querySelector('#black').addEventListener('click', function() {
-                socket.emit('colour_selected', 'black');
+                socket.emit('color_selected', 'black');
             });
 
             document.querySelector('#white').addEventListener('click', function() {
-                socket.emit('colour_selected', 'white');
+                socket.emit('color_selected', 'white');
+            });
+            
+            document.querySelector('#startGame').addEventListener('click', function() {
+                socket.emit('color_selected', 'white');
             });
         </script>
     </body>

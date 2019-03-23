@@ -9,27 +9,29 @@ const LISTEN_PORT = 8080; //make sure greater than 3000. Some ports are reserved
 app.use((express.static(__dirname + '/public'))); //set root dir to the public folder
 
 //routes
-//app.get('/color', function(req,res) {
-  //  res.sendFile(__dirname + '/public/color.html');
-//});
+app.get('/color', function(req,res) {
+    res.sendFile(__dirname + '/public/color.html');
+});
 
 app.get('/collaborate', function(req,res) {
     res.sendFile(__dirname + '/public/collaborate.html');
 });
 
-app.get('/collaborate', function(req,res) {
+app.get('/competitive', function(req,res) {
     res.sendFile(__dirname + '/public/competitive.html');
 });
 
 
-// Array for available colours, playerId, player selected colour, etc
+// Array for available Colors, playerId, player selected Color, etc
 let nextPlayerId = 0;
 let numberPlayersInGame = 0;
-
 let playerId = {};
-let playerColour = {};
+let playerColor = {};
 
-let colours = {
+let numberCompetitivePlayersInGame = 0;
+let competitivePlayerId = {};
+
+let Colors = {
     red:    {r:255, g:0,   b:0  },
     orange: {r:255, g:127, b:80 },
     yellow: {r:255, g:255, b:0  },
@@ -40,7 +42,7 @@ let colours = {
     black:  {r:0,   g:0,   b:0  },
     white:  {r:255, g:255, b:255}
 };
-let mixedColour = {r:255, r:255, r:255};
+let mixedColor = {r:255, r:255, r:255};
 
 
 //websocket stuff
@@ -48,7 +50,7 @@ socketIO.on('connection', function(socket) {
     nextPlayerId++;
     numberPlayersInGame++;
     playerId[socket.id] = nextPlayerId;
-    socket.to(socket.id).emit('playerId', playerId[socket.id]);
+    socket.emit('player_id', playerId[socket.id]);
     console.log('player#' + playerId[socket.id] + ' (socket.id=' + socket.id + ') has joined the game! => Total=' + numberPlayersInGame);
     console.log(playerId);
 
@@ -56,7 +58,7 @@ socketIO.on('connection', function(socket) {
         numberPlayersInGame--;
         console.log('player#' + playerId[socket.id] + ' (socket.id=' + socket.id + ') has left the game! => Total=' + numberPlayersInGame);
         delete playerId[socket.id];
-        delete playerColour[socket.id];
+        delete playerColor[socket.id];
         console.log(playerId);
     });
 
@@ -65,36 +67,61 @@ socketIO.on('connection', function(socket) {
     //socket = one client
     //socketIO.sockets = all clients
 
-    socket.on('colour_selected', function(data) {
-        console.log('player#' + playerId[socket.id] + ' selected colour ' + data);
-        playerColour[socket.id] = colours[data];
-        console.log('# of players selected colours are: ' + Object.keys(playerColour).length)
-        console.log(playerColour);
-        socket.emit('player_id', playerId[socket.id]);
+    socket.on('color_selected', function(data) {
+        console.log('collaborate: player#' + playerId[socket.id] + ' selected Color ' + data);
+        playerColor[socket.id] = Colors[data];
+        console.log('# of players selected Colors are: ' + Object.keys(playerColor).length)
+        console.log(playerColor);
 
-        //Mixing colors from colors selected by all players 
+        //Mixing Colors from Colors selected by all players 
         let r = 0;
         let g = 0;
         let b = 0;
-        let numColoursToMix = 0;
+        let numColorsToMix = 0;
 
-        const list = Object.keys(playerColour);
+        const list = Object.keys(playerColor);
         list.forEach(player => {
-            r = r + playerColour[player].r;
-            g = g + playerColour[player].g;
-            b = b + playerColour[player].b;
-            numColoursToMix++;
+            r = r + playerColor[player].r;
+            g = g + playerColor[player].g;
+            b = b + playerColor[player].b;
+            numColorsToMix++;
         });
-        console.log('Sum of colors (' + numColoursToMix + '): r=' + r + ', g=' + g + ', b=' + b);
+        console.log('Sum of Colors (' + numColorsToMix + '): r=' + r + ', g=' + g + ', b=' + b);
         
-        r = parseInt(r / numColoursToMix);
-        g = parseInt(g / numColoursToMix);
-        b = parseInt(b / numColoursToMix);
-        console.log('Mixed color   (' + numColoursToMix + '): r=' + r + ', g=' + g + ', b=' + b);
+        r = parseInt(r / numColorsToMix);
+        g = parseInt(g / numColorsToMix);
+        b = parseInt(b / numColorsToMix);
+        console.log('Mixed Color   (' + numColorsToMix + '): r=' + r + ', g=' + g + ', b=' + b);
 
         //Send to all players
-        socketIO.sockets.emit('color_change', {r, g, b});
-        socketIO.sockets.emit('players_count', numColoursToMix);
+        socketIO.sockets.emit('Color_change', {r, g, b});
+        socketIO.sockets.emit('players_count', numColorsToMix);
+    });
+
+    // Competitive section:
+    socket.on('color_selected_competitive', function(data) {
+        console.log('competitive: player#' + competitivePlayerId[socket.id] + ' selected Color ' + data);
+        //playerColor[socket.id] = Colors[data];
+        //console.log('# of players selected Colors are: ' + Object.keys(playerColor).length)
+        //console.log(playerColor);
+ 
+        //Send to all players
+        //socketIO.sockets.emit('Color_change', {r, g, b});
+        //socketIO.sockets.emit('players_count', numColorsToMix);
+    });
+
+    socket.on('competitive_game', function(data) {
+        if (data == 'join') {
+            competitivePlayerId[socket.id] = playerId[socket.id];
+            numberCompetitivePlayersInGame++;
+            console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has joined the competitive game! => Total=' + numberCompetitivePlayersInGame);
+            console.log(competitivePlayerId);        
+            socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
+        } else if (data == 'start') {
+            console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has started the competitive game! => Total=' + numberCompetitivePlayersInGame);
+            console.log(competitivePlayerId);
+            socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);     
+        }
     });
 });
 

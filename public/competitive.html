@@ -3,28 +3,47 @@
     <head>
     </head>
     <body>
-        <h1>Welcome to the Color Mixer!</h1>
+        <h1>Welcome to the Speed Clicking (Typing) Match!</h1>
         <h2>How the game works:</h2>
-        <h3>- 2 or more players have to be connected to the game</h3>
-        <h3>- Once players are connected, select 1 color</h3>
-        <h3>- Wait till everyone finishes selecting a color</h3>
-        <h3>- Once everyone has selected 1 color, the screen will automatically show you all the colors mixed together</h3>
-        
+        <h3>- 1 or more players can connect to competitive</h3>
+        <h3>- Any player can start the game, the timer will start for all players for the typing test</h3>
+
         <!-- some very nice color buttons -->
-        <button id="red" style="background-color:red; color:whitesmoke;">RED</button>
-        <button id="orange" style="background-color:orange; color:black;">ORANGE</button>
-        <button id="yellow" style="background-color:yellow; color:black;">YELLOW</button>
-        <button id="green" style="background-color:green; color:whitesmoke;">GREEN</button>
-        <button id="blue" style="background-color:blue; color:whitesmoke;">BLUE</button>
-        <button id="purple" style="background-color:purple; color:whitesmoke;">PURPLE</button>
-        <button id="pink" style="background-color:pink; color:black;">PINK</button>
-        <button id="black" style="background-color:black; color:white;">BLACK</button>
-        <button id="white" style="background-color:white; color:black;">WHITE</button>
+        <button id="red"    style="background-color:red;    color:whitesmoke;">A (red)</button>
+        <button id="orange" style="background-color:orange; color:black;">C (orange)</button>
+        <button id="yellow" style="background-color:yellow; color:black;">D (yellow)</button>
+        <button id="green"  style="background-color:green;  color:whitesmoke;">I (green)</button>
+        <button id="blue"   style="background-color:blue;   color:whitesmoke;">M (purple)</button>
+        <button id="purple" style="background-color:purple; color:whitesmoke;">N (purple)</button>
+        <button id="pink"   style="background-color:pink;   color:black; width:80px;">(pink)</button>
 
         <h3></h3>
-        <div id="playerId-block" hidden><div id="playerId"></div></div>
-        <div id="playersCount-block" hidden><div id="playersCount"></div></div>
-        
+        <div id="playerId-block"><div id="playerId"></div></div>
+        <div id="playersCount-block"><div id="playersCount"></div></div>
+        <h3></h3>
+        <button id="joinCompetitiveGame" style="background-color:white; color:black;">Join Game</button>
+        <button id="startCompetitiveGame" style="background-color:white; color:black;">Start Game</button>
+        <h3></h3>
+        <h3>- Typing letters:  (click on correct color button that represent the letter)</h3>
+        <h3></h3>
+        <table>
+            <tr>
+                <td><button id="row1_col1"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>I</td>
+                <td><button id="row1_col2"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled> </td>
+                <td><button id="row1_col3"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>A</td>
+                <td><button id="row1_col4"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>M</td>
+                <td><button id="row1_col5"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled> </td>
+                <td><button id="row1_col6"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>C</td>
+                <td><button id="row1_col7"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>A</td>
+                <td><button id="row1_col8"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>N</td>
+                <td><button id="row1_col8"  type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>A</td>
+                <td><button id="row1_col10" type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>D</td>
+                <td><button id="row1_col11" type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>I</td>
+                <td><button id="row1_col12" type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>A</td>
+                <td><button id="row1_col13" type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>N</td>
+            </tr>
+        </ta1ble>
+
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -46,17 +65,16 @@
 
             socket.on('player_id', function(data) {
                 var playerIdStr = 'Player ID: ' + data;
-                document.getElementById('playerId-block').hidden = false;
                 document.getElementById('playerId-block').innerText = playerIdStr;
                 console.log('player_id received: ' + playerIdStr);
             });
 
             socket.on('players_count', function(data) {
                 var playersCountStr = 'Number of Players: ' + data;
-                document.getElementById('playersCount-block').hidden = false;
                 document.getElementById('playersCount-block').innerText = playersCountStr;
                 console.log('players_count received: ' + playersCountStr);
             });
+
 
             //let's send some events to the server to pass on. Programmatic telephone game!
             //querySelector() is a more modern and versatile function of getElementById()
@@ -67,40 +85,40 @@
             //note that querySelector can also be used on elements so that you only search for their children
             //instead of all elements within teh "document"
 
-            // colours
+            // colors
             document.querySelector('#red').addEventListener('click', function() {
-                socket.emit('colour_selected', 'red');
+                socket.emit('color_selected_competitive', 'red');
             });
 
             document.querySelector('#orange').addEventListener('click', function() {
-                socket.emit('colour_selected', 'orange');
+                socket.emit('color_selected_competitive', 'orange');
             });
 
             document.querySelector('#yellow').addEventListener('click', function() {
-                socket.emit('colour_selected', 'yellow');
+                socket.emit('color_selected_competitive', 'yellow');
             });
             document.querySelector('#green').addEventListener('click', function() {
-                socket.emit('colour_selected', 'green');
+                socket.emit('color_selected_competitive', 'green');
             });
 
             document.querySelector('#blue').addEventListener('click', function() {
-                socket.emit('colour_selected', 'blue');
+                socket.emit('color_selected_competitive', 'blue');
             });
 
             document.querySelector('#purple').addEventListener('click', function() {
-                socket.emit('colour_selected', 'purple');
+                socket.emit('color_selected_competitive', 'purple');
             });
 
             document.querySelector('#pink').addEventListener('click', function() {
-                socket.emit('colour_selected', 'pink');
+                socket.emit('color_selected_competitive', 'pink');
             });
 
-            document.querySelector('#black').addEventListener('click', function() {
-                socket.emit('colour_selected', 'black');
+            document.querySelector('#joinCompetitiveGame').addEventListener('click', function() {
+                socket.emit('competitive_game', 'join');
             });
 
-            document.querySelector('#white').addEventListener('click', function() {
-                socket.emit('colour_selected', 'white');
+            document.querySelector('#startCompetitiveGame').addEventListener('click', function() {
+                socket.emit('competitive_game', 'start');
             });
         </script>
     </body>
