@@ -31,7 +31,7 @@ let playerColor = {};
 let numberCompetitivePlayersInGame = 0;
 let competitivePlayerId = {};
 
-let Colors = {
+let colors = {
     red:    {r:255, g:0,   b:0  },
     orange: {r:255, g:127, b:80 },
     yellow: {r:255, g:255, b:0  },
@@ -44,6 +44,15 @@ let Colors = {
 };
 let mixedColor = {r:255, r:255, r:255};
 
+let colorToKey = {
+    red:    'A',
+    orange: 'C',
+    yellow: 'D',
+    green:  'I',
+    blue:   'M',
+    purple: 'N',
+    pink:   'sp'
+};
 
 //websocket stuff
 socketIO.on('connection', function(socket) {
@@ -69,7 +78,7 @@ socketIO.on('connection', function(socket) {
 
     socket.on('color_selected', function(data) {
         console.log('collaborate: player#' + playerId[socket.id] + ' selected Color ' + data);
-        playerColor[socket.id] = Colors[data];
+        playerColor[socket.id] = colors[data];
         console.log('# of players selected Colors are: ' + Object.keys(playerColor).length)
         console.log(playerColor);
 
@@ -94,23 +103,17 @@ socketIO.on('connection', function(socket) {
         console.log('Mixed Color   (' + numColorsToMix + '): r=' + r + ', g=' + g + ', b=' + b);
 
         //Send to all players
-        socketIO.sockets.emit('Color_change', {r, g, b});
+        socketIO.sockets.emit('color_change', {r, g, b});
         socketIO.sockets.emit('players_count', numColorsToMix);
     });
 
     // Competitive section:
     socket.on('color_selected_competitive', function(data) {
         console.log('competitive: player#' + competitivePlayerId[socket.id] + ' selected Color ' + data);
-        //playerColor[socket.id] = Colors[data];
-        //console.log('# of players selected Colors are: ' + Object.keys(playerColor).length)
-        //console.log(playerColor);
- 
-        //Send to all players
-        //socketIO.sockets.emit('Color_change', {r, g, b});
-        //socketIO.sockets.emit('players_count', numColorsToMix);
     });
 
     socket.on('competitive_game', function(data) {
+        console.log('selection=' + data);
         if (data == 'join') {
             competitivePlayerId[socket.id] = playerId[socket.id];
             numberCompetitivePlayersInGame++;
@@ -118,17 +121,20 @@ socketIO.on('connection', function(socket) {
             console.log(competitivePlayerId);        
             socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
         }
-        else if (data == 'start') {
+        if (data == 'start') {
             console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has started the competitive game! => Total=' + numberCompetitivePlayersInGame);
             console.log(competitivePlayerId);
-            socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);     
+            //socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);     
+            socketIO.sockets.emit('competitive_game_start', numberCompetitivePlayersInGame);
         }
-        else if (data == 'stop') {
+        if (data == 'stop') {
             console.log('player#' + competitivePlayerId[socket.id] + ' (socket.id=' + socket.id + ') has stopped the competitive game! => Total=' + numberCompetitivePlayersInGame);
             console.log(competitivePlayerId);
-            socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
+            //socketIO.sockets.emit('players_count', numberCompetitivePlayersInGame);
+            socketIO.sockets.emit('competitive_game_stop', numberCompetitivePlayersInGame);
         }
     });
+
 });
 
 //finally, start server

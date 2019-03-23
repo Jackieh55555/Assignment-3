@@ -13,17 +13,21 @@
         <button id="orange" style="background-color:orange; color:black;">C (orange)</button>
         <button id="yellow" style="background-color:yellow; color:black;">D (yellow)</button>
         <button id="green"  style="background-color:green;  color:whitesmoke;">I (green)</button>
-        <button id="blue"   style="background-color:blue;   color:whitesmoke;">M (purple)</button>
+        <button id="blue"   style="background-color:blue;   color:whitesmoke;">M (blue)</button>
         <button id="purple" style="background-color:purple; color:whitesmoke;">N (purple)</button>
         <button id="pink"   style="background-color:pink;   color:black; width:80px;">(pink)</button>
-
+        
         <h3></h3>
         <div id="playerId-block"><div id="playerId"></div></div>
         <div id="playersCount-block"><div id="playersCount"></div></div>
+        <div id="winOrLose-block"><div id="winOrLose"></div></div>
+        <h3></h3>
+
         <h3></h3>
         <button id="joinCompetitiveGame"  style="background-color:white; color:black;">Join Game</button>
         <button id="startCompetitiveGame" style="background-color:white; color:black;">Start Game</button>
         <button id="stopCompetitiveGame"  style="background-color:white; color:black;">Stop Game</button>
+
         <h3></h3>
         <h3>- Typing letters:  (click on correct color button that represent the letter)</h3>
         <h3></h3>
@@ -44,11 +48,36 @@
                 <td><button id="row1_col13" type="button" style="background-color:white; color:black; height:25px; width:50px;" disabled>N</td>
             </tr>
         </ta1ble>
-
+        
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
         <script src="/socket.io/socket.io.js"></script>
         <script>
             let socket = io();
+            //let referenceKeysPattern[] = {'I', 'sp', 'A', 'M', 'sp', 'C', 'A', 'N', 'A', 'D', 'I', 'A', 'N'};
+            //let referenceColorPattern[] = {'green', 'pink', 'red', 'blue', 'pink', 'orange', 'red', 'purple', 'red', 'yellow', 'green', 'red', 'blue'};
+            let clickedKeys = [];
+            let clickCount = 0;
+            let gameStarted = false;
+            let gameStopped = false;
+
+            let colorToLetter = {
+                red:    'A',
+                orange: 'C',
+                yellow: 'D',
+                green:  'I',
+                blue:   'M',
+                purple: 'N',
+                pink:   'sp'
+            };
+            
+            function buttonClicked(key) {
+                if ( colorToLetter(key).key == key) {
+                    clickCount++;
+                    document.body.style.backgroundColor = pattern[counter].colorStr
+                    let columnStr = 'row1_col' + clickCount;
+                    document.getElementById(columnStr).style.backgroundColor = key;
+                }
+            }
 
             //default connect event
             socket.on('connect', function() {
@@ -73,6 +102,21 @@
             socket.on('players_count', function(data) {
                 var playersCountStr = 'Number of Players: ' + data;
                 document.getElementById('playersCount-block').innerText = playersCountStr;
+                document.getElementById('winOrLose-block').innerText = 'Game Status: waiting';
+                console.log('players_count received: ' + playersCountStr);
+            });
+
+            socket.on('competitive_game_start', function(data) {
+                var playersCountStr = 'Number of Players: ' + data;
+                document.getElementById('playersCount-block').innerText = playersCountStr;
+                document.getElementById('winOrLose-block').innerText = 'Game Status: game in progress';
+                console.log('players_count received: ' + playersCountStr);
+            });
+            
+            socket.on('competitive_game_stop', function(data) {
+                var playersCountStr = 'Number of Players: ' + data;
+                document.getElementById('playersCount-block').innerText = playersCountStr;
+                document.getElementById('winOrLose-block').innerText = 'Game Status: game stopped';
                 console.log('players_count received: ' + playersCountStr);
             });
 
@@ -89,41 +133,57 @@
             // colors
             document.querySelector('#red').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'red');
+                
+                clickedKeys.push('red');
             });
 
             document.querySelector('#orange').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'orange');
+                clickedKeys.push('orange');
             });
 
             document.querySelector('#yellow').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'yellow');
+                clickedKeys.push('yellow');
             });
             document.querySelector('#green').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'green');
+                clickedKeys.push('green');
             });
 
             document.querySelector('#blue').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'blue');
+                clickedKeys.push('blue');
             });
 
             document.querySelector('#purple').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'purple');
+                clickedKeys.push('rpurpleed');
             });
 
             document.querySelector('#pink').addEventListener('click', function() {
                 socket.emit('color_selected_competitive', 'pink');
+                clickedKeys.push('pink');
             });
 
             document.querySelector('#joinCompetitiveGame').addEventListener('click', function() {
+                clickedKeys = [];
+                gameStarted = false;
+                gameStopped = false;
                 socket.emit('competitive_game', 'join');
             });
 
             document.querySelector('#startCompetitiveGame').addEventListener('click', function() {
                 socket.emit('competitive_game', 'start');
+                gameStarted = true;
+                gameStopped = false;
             });
         
             document.querySelector('#stopCompetitiveGame').addEventListener('click', function() {
                 socket.emit('competitive_game', 'stop');
+                gameStarted = true;
+                gameStopped = true;
+                socket.emit('score', clickCount);
             });
         </script>
     </body>

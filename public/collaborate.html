@@ -19,16 +19,9 @@
         <button id="black"  style="background-color:black;  color:white;">BLACK</button>
         <button id="white"  style="background-color:white;  color:black;">WHITE</button>
 
-        <!--
-        <h3></h3>
-        <button id="collaborateStart" style="background-color:white; color:black;">Start Collaborate</button>
-        <button id="collaborateStop"  style="background-color:white; color:black;">Stop  Collaborate</button>
-        -->
-
         <h3></h3>
         <div id="playerId-block"><div id="playerId"></div></div>
         <div id="playersCount-block"><div id="playersCount"></div></div>
-        
         
 
         <!-- scripts go to bottom if you want them to execute AFTER the rest of the web page renders -->
@@ -106,10 +99,6 @@
             });
 
             document.querySelector('#white').addEventListener('click', function() {
-                socket.emit('color_selected', 'white');
-            });
-            
-            document.querySelector('#startGame').addEventListener('click', function() {
                 socket.emit('color_selected', 'white');
             });
         </script>
